@@ -36,6 +36,11 @@ describe('ocr kata', function () {
 		});
 	});
 	describe('User story 2', function(){
-
+    it('#checksum(457508000) should return true"', function () {
+			assert(ocr.checksum('457508000') === true); 
+    });
+    it('#checksum(111111111) should return false"', function () {
+			assert(ocr.checksum('111111111') === false); 
+    });
 	});
 });

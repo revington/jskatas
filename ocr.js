@@ -40,10 +40,17 @@
     ocr.translateEntry = function (input) {
         var arr = ocr.encodeEntry(input),
             i = arr.length,
-            ret = '';
+            ret = '',
+            curr;
         while (i--) {
-            ret = mapNumbers['' + arr[i]] + ret;
+            ret = mapNumbers['' + arr[i]] || '?' + ret;
         }
-				return ret;
+        return ret;
+    };
+    ocr.checksum = function (input) {
+        return ocr.calcChecksum(input) % 11 === 0;
+    };
+    ocr.calcChecksum = function (input) {
+        return !input ? 1 : ((input[input.length - 1] - 0) + (10 - input.length)) * ocr.calcChecksum(input.slice(0, -1));
     };
 })(typeof exports === 'undefined' ? ocr = {} : exports);
