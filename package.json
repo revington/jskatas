@@ -1,0 +1,26 @@
+{
+  "name": "jskatas",
+  "version": "0.0.0",
+  "description": "Javascript katas",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "~1.4.2"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/revington/jskatas.git"
+  },
+  "keywords": [
+    "kata",
+    "katas"
+  ],
+  "author": "Pedro Narciso García Revington",
+  "license": "BSD"
+}
