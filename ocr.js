@@ -15,42 +15,33 @@
         rows = 3,
         entryChars = 27,
         entryLimit = 29;
-    ocr.encodeOne = function (input) {
-        var ret = 0,
-            i = input.length;
-        while (i--) {
-            ret += (input[i] === ' ') ? 0 : Math.pow(2, i);
-        }
-        return ret;
-    };
     ocr.encodeEntry = function (input) {
-        var i, ret = [],
-            buffer = ['', '', '', '', '', '', '', '', ''];
+        var i, k, j = 0,
+            ret = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         for (i = 0; i < entryChars; i++) {
-            if (i > 0 && 0 === (i % rows)) {
-                ret.push(ocr.encodeOne(buffer));
+            if (i && 0 === (i % rows)) {
+                j++;
             }
-            buffer[i % rows] = input[i];
-            buffer[(i % rows) + rows] = input[i + entryLimit];
-            buffer[(i % rows) + (rows * 2)] = input[i + (entryLimit * 2)];
+            for (k = 0; k < 3; k++) {
+                if (input[i + (entryLimit * k)] !== ' ') {
+                    ret[j] += (1 << ((i % rows) + rows * k));
+                }
+            }
         }
-        ret.push(ocr.encodeOne(buffer));
-        return ret;
-    };
-    ocr.translateEntry = function (input) {
-        var arr = ocr.encodeEntry(input),
-            i = arr.length,
-            ret = '',
-            curr;
-        while (i--) {
-            ret = mapNumbers['' + arr[i]] || '?' + ret;
-        }
-        return ret;
+        return ret.map(function (c) {
+            return mapNumbers[c] || '?';
+        }).join('');
     };
     ocr.checksum = function (input) {
-        return ocr.calcChecksum(input) % 11 === 0;
-    };
-    ocr.calcChecksum = function (input) {
-        return !input ? 1 : ((input[input.length - 1] - 0) + (10 - input.length)) * ocr.calcChecksum(input.slice(0, -1));
+        var sum = 0,
+            len = input.length,
+            i = len;
+        while (i--) {
+            if (input[i] === '?') {
+                return 'err';
+            }
+            sum += (input[i] - 0) * i;
+        }
+        return sum % 11 === 0;
     };
 })(typeof exports === 'undefined' ? ocr = {} : exports);
